@@ -10,12 +10,25 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
-export const uploadDataToS3 = async (data: Buffer): Promise<AWS.S3.ManagedUpload.SendData> => {
+export const uploadDataToS3 = async (
+  data: Buffer,
+  metadata: { [key: string]: any }
+): Promise<AWS.S3.ManagedUpload.SendData> => {
+  const filename = metadata.filename || `backup-${Date.now()}.txt`;
+  const key = `backup/${Date.now()}-${filename}`;
+  
   const params = {
     Bucket: appConfig.aws.bucketName,
-    Key: `backup/${Date.now()}.json`,
-    Body: JSON.stringify(data),
+    Key: key,
+    Body: metadata.mimetype ? data : data.toString(),
     ServerSideEncryption: "AES256",
+    Metadata: {
+      ...Object.entries(metadata).reduce((acc, [key, value]) => ({
+        ...acc,
+        [key]: String(value)
+      }), {})
+    },
+    ContentType: metadata.mimetype || 'text/plain'
   };
 
   return await s3.upload(params).promise();

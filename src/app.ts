@@ -1,15 +1,15 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
+import type { Express, Request, Response, NextFunction } from 'express';
 import backupRoutes from './routes/backupRoutes';
 import { logger } from './utils/logger';
 
-const app = express();
+const app: Express = express();
 
 app.use(express.json());
 app.use('/api', backupRoutes);
 
-app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
-  const error = err as Error;
-  logger.error(error.message);
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  logger.error(err.message);
   res.status(500).json({ error: "An unexpected error occurred" });
 });
 

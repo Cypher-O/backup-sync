@@ -1,7 +1,11 @@
+import express from 'express';
+import type { Express } from 'express';
 import app from './app';
 
-const PORT = process.env.PORT || 3000;
+const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-app.listen(PORT, () => {
+const server: Express = app;
+
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
