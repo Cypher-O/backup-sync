@@ -1,19 +1,17 @@
-import express from 'express';
-import { config } from 'dotenv';
+import express, { Request, Response, NextFunction } from 'express';
 import backupRoutes from './routes/backupRoutes';
-import { errorHandler } from './middlewares/errorHandler';
-
-config(); // Load environment variables
+import { logger } from './utils/logger';
 
 const app = express();
 
 app.use(express.json());
+app.use('/api', backupRoutes);
 
-// Apply routes and middlewares
-app.use('/api/backup', backupRoutes);
-app.use(errorHandler);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// Error handler with type imports
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+  const error = err as Error;  // Cast to Error to access .message
+  logger.error(error.message);
+  res.status(500).json({ error: "An unexpected error occurred" });
 });
+
+export default app;

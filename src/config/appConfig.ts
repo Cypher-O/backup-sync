@@ -1,5 +1,3 @@
-// src/config/appConfig.ts
-
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,7 +12,7 @@ const appConfig = {
 };
 
 if (!appConfig.aws.bucketName) {
-  throw new Error("Missing AWS_S3_BUCKET_NAME in environment variables.");
+  throw new Error("AWS_S3_BUCKET_NAME is required in environment variables.");
 }
 
 export default appConfig;

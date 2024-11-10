@@ -1,11 +1,15 @@
+// src/controllers/backupController.ts
 import { Request, Response, NextFunction } from 'express';
-import * as backupService from '../services/backupService';
+import { uploadDataToS3 } from '../services/backupService';
+import { dataSchema } from '../validators/backupValidator';
+import { addToBackupQueue } from '../queues/backupQueue';
 
-export const backupData = async (req: Request, res: Response, next: NextFunction) => {
+export const handleBackup = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { data } = req.body;
-    const result = await backupService.uploadDataToS3(data);
-    res.status(200).json({ message: 'Data backed up successfully', result });
+    dataSchema.parse(req.body);  // Validate data
+
+    const result = await addToBackupQueue(req.body.data);
+    res.status(202).json({ message: "Backup initiated", jobId: result.id });
   } catch (error) {
     next(error);
   }

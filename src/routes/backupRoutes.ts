@@ -1,9 +1,9 @@
 import express from 'express';
-import { backupData } from '../controllers/backupController';
+import { handleBackup } from '../controllers/backupController';
 import { rateLimiter } from '../middlewares/rateLimiter';
 
 const router = express.Router();
 
-router.post('/sync', rateLimiter, backupData);
+router.post('/backup', rateLimiter, handleBackup);
 
 export default router;
