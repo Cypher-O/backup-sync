@@ -4,7 +4,7 @@ import { logger } from '../utils/logger';
 
 const backupQueue = new Queue<string>('backupQueue', { redis: { host: 'localhost', port: 6379 } });
 
-backupQueue.process(async (job: Job<string>) => {  // Type the job parameter
+backupQueue.process(async (job: Job<string>) => { 
   try {
     const result = await uploadDataToS3(Buffer.from(job.data));
     logger.info(`Data uploaded successfully: ${result.Location}`);

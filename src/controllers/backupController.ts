@@ -1,4 +1,3 @@
-// src/controllers/backupController.ts
 import { Request, Response, NextFunction } from 'express';
 import { uploadDataToS3 } from '../services/backupService';
 import { dataSchema } from '../validators/backupValidator';
