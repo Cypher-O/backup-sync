@@ -1,9 +1,10 @@
 import express from 'express';
-import { handleBackup } from '../controllers/backupController';
+import { handleFileUpload, handleDataBackup } from '../controllers/backupController';
 import { rateLimiter } from '../middlewares/rateLimiter';
 
 const router = express.Router();
 
-router.post('/backup', rateLimiter, handleBackup);
+router.post('/backup/file', rateLimiter, handleFileUpload);
+// router.post('/backup/data', rateLimiter, handleDataBackup);
 
 export default router;
